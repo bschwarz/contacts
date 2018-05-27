@@ -37,7 +37,9 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
     <button id="authorize-button" style="display: none;">Authorize</button>
     <button id="signout-button" style="display: none;">Sign Out</button>
 
-    <div id="content"></div>
+    <div id="content">
+      <ol id="list"></ol>
+    </div>
 
     <script type="text/javascript">
       // Enter an API key from the Google API Console:
@@ -100,14 +102,14 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
           'resourceName': 'people/me/connections',
           'requestMask.includeField': 'person.names'
         }).then(function(resp) {
-          var p = document.createElement('p');
+          var p = document.createElement('li');
           // var name = resp.result.names[0].givenName;
 console.log(resp.result);
           var names = resp.result.connections;
           var len = resp.result.connections.length;
           for (var i = 0; i < len; i++) {
           	p.appendChild(document.createTextNode(names[i].names[0].givenName));
-            document.getElementById('content').appendChild(p);
+            document.getElementById('list').appendChild(p);
           }
           
         });
