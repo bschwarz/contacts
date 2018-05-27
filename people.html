@@ -56,6 +56,9 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
     <button id="signout-button" style="display: none;">Sign Out</button>
 
     <script type="text/javascript">
+      var pagetoken = '';
+      var maxcount = 100;
+
       // Enter an API key from the Google API Console:
       //   https://console.developers.google.com/apis/credentials
       var apiKey = 'AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg';
@@ -99,9 +102,14 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
           authorizeButton.style.display = 'none';
           signoutButton.style.display = 'block';
           var ptoken = '';
-          for (var i = 0; i < 4; i++) {
-            ptoken = makeApiCall(ptoken);
-            console.log('PAGE TOKEN: ' + ptoken);
+          // console.log(makeApiCall2());
+          // return
+          for (var i = 0; i < 2; i++) {
+            var x = makeApiCall(ptoken);
+            console.log('X: ' + x.stringify());
+            if (! pagetoken) {
+              console.log('PTOKEN NOT VALID ' + i);
+            }
           }
           
         } else {
@@ -115,23 +123,40 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
       function handleSignoutClick(event) {
         gapi.auth2.getAuthInstance().signOut();
       }
-      // Load the API and make an API call.  Display the results on the screen.
-      function makeApiCall(token) {
-        gapi.client.people.people.get({
+
+      async function makeApiCall2() {
+        var res = await gapi.client.people.people.get({
           'resourceName': 'people/me/connections',
           'personFields': 'names,phoneNumbers,emailAddresses',
           'sortOrder': 'FIRST_NAME_ASCENDING',
-          'pageToken': token
+          'pageToken': pagetoken
+        });
+
+        return res;
+      }
+      // Load the API and make an API call.  Display the results on the screen.
+      function makeApiCall(token) {
+        var res = gapi.client.people.people.get({
+          'resourceName': 'people/me/connections',
+          'personFields': 'names,phoneNumbers,emailAddresses',
+          'sortOrder': 'FIRST_NAME_ASCENDING',
+          'pageToken': pagetoken
         }).then(function(resp) {
           // var p = document.createElement('li');
           // var name = resp.result.names[0].givenName;
 console.log(resp.result);
+console.log('PG TOKEN: ' + pagetoken);
+console.log('MAX COUNT: ' + maxcount);
+          // pagetoken = '';
+          console.log('PG TOKEN: ' + pagetoken);
+          pagetoken = resp.result.nextPageToken;
+          console.log('PG TOKEN: ' + pagetoken);
           var conns = resp.result.connections;
           var len = conns.length;
           for (var i = 0; i < len; i++) {
             var tr = document.createElement('tr');
             var td = document.createElement('td');
-          	td.appendChild(document.createTextNode(conns[i].names[0].displayName));
+          	td.appendChild(document.createTextNode(i + ' ' + conns[i].names[0].displayName));
             tr.appendChild(td);
 
             var td = document.createElement('td');
@@ -148,9 +173,15 @@ console.log(resp.result);
             document.getElementById('tbody').appendChild(tr);
           }
           document.getElementById('total').innerHTML = "Total number of contacts = " + resp.result.totalItems;
-          return conns.nextPageToken
+
+          if (resp.result.nextPageToken) {
+            makeApiCall(resp.result.nextPageToken);
+          }
+          return {'nexttoken': pagetoken, 'totalitems': resp.result.totalItems};
           
         });
+console.log('RES ' + res);
+        return res;
       }
     </script>
     <script async defer src="https://apis.google.com/js/api.js" 
