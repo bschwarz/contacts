@@ -103,10 +103,10 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
           var p = document.createElement('p');
           // var name = resp.result.names[0].givenName;
 console.log(resp.result);
-          var names = resp.result.names;
-          var len = resp.result.names.length;
+          var names = resp.result.connections;
+          var len = resp.result.connections.length;
           for (var i = 0; i < len; i++) {
-          	p.appendChild(document.createTextNode(names[i].givenName));
+          	p.appendChild(document.createTextNode(names[i].names[0].givenName));
             document.getElementById('content').appendChild(p);
           }
           
