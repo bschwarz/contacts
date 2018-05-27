@@ -114,7 +114,7 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
       function makeApiCall() {
         gapi.client.people.people.get({
           'resourceName': 'people/me/connections',
-          'personFields': 'names,addresses,emailAddresses'
+          'personFields': 'names,phoneNumbers,emailAddresses'
         }).then(function(resp) {
           // var p = document.createElement('li');
           // var name = resp.result.names[0].givenName;
