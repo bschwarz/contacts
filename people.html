@@ -118,22 +118,23 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
           // var p = document.createElement('li');
           // var name = resp.result.names[0].givenName;
 console.log(resp.result);
-          var names = resp.result.connections;
-          var len = resp.result.connections.length;
+          var conns = resp.result.connections;
+          var len = conns.length;
           for (var i = 0; i < len; i++) {
             var tr = document.createElement('tr');
             var td = document.createElement('td');
-          	td.appendChild(document.createTextNode(names[i].names[0].displayName));
+          	td.appendChild(document.createTextNode(conns[i].names[0].displayName));
+            tr.appendChild(td);
             
             var td = document.createElement('td');
-            if (names[i].names[0].phoneNumbers) {
-              td.appendChild(document.createTextNode(names[i].names[0].phoneNumbers[0].value));
+            if (conns[i].phoneNumbers[0]) {
+              td.appendChild(document.createTextNode(conns[i].phoneNumbers[0].value));
             }
             tr.appendChild(td);
 
             var td = document.createElement('td');
-            if (names[i].names[0].emailAddresses) {
-              td.appendChild(document.createTextNode(names[i].names[0].emailAddresses[0].value));
+            if (conns[i].emailAddresses[0]) {
+              td.appendChild(document.createTextNode(conns[i].emailAddresses[0].value));
             }
             tr.appendChild(td);
             document.getElementById('tbody').appendChild(tr);
