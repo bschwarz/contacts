@@ -39,6 +39,7 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
     <button id="authorize-button" style="display: none;">Import</button>
 
     <br>
+    <p id='total'>
     <table class="table table-striped">
       <thead class='thead-light'>
         <tr>
@@ -145,7 +146,7 @@ console.log(resp.result);
             tr.appendChild(td);
             document.getElementById('tbody').appendChild(tr);
           }
-
+          document.getElementById('total').innerHTML = "Total number of contacts = " + resp.result.totalItems;
           return conns.nextPageToken
           
         });
