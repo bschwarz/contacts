@@ -42,10 +42,9 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
     <table class="table table-striped">
       <thead class='thead-light'>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">First</th>
-          <th scope="col">Last</th>
-          <th scope="col">Handle</th>
+          <th scope="col">Name</th>
+          <th scope="col">Phone</th>
+          <th scope="col">Email</th>
         </tr>
       </thead>
       <tbody id='tbody'>
@@ -124,9 +123,20 @@ console.log(resp.result);
           for (var i = 0; i < len; i++) {
             var tr = document.createElement('tr');
             var td = document.createElement('td');
-          	td.appendChild(document.createTextNode(names[i].names[0].givenName));
+          	td.appendChild(document.createTextNode(names[i].names[0].displayName));
+            
+            var td = document.createElement('td');
+            if (names[i].names[0].phoneNumbers) {
+              td.appendChild(document.createTextNode(names[i].names[0].phoneNumbers[0].value));
+            }
             tr.appendChild(td);
-            document.getElementById('tbody').appendChild(p);
+
+            var td = document.createElement('td');
+            if (names[i].names[0].emailAddresses) {
+              td.appendChild(document.createTextNode(names[i].names[0].emailAddresses[0].value));
+            }
+            tr.appendChild(td);
+            document.getElementById('tbody').appendChild(tr);
           }
           
         });
