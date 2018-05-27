@@ -102,12 +102,13 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
           'resourceName': 'people/me/connections',
           'requestMask.includeField': 'person.names'
         }).then(function(resp) {
-          var p = document.createElement('li');
+          // var p = document.createElement('li');
           // var name = resp.result.names[0].givenName;
 console.log(resp.result);
           var names = resp.result.connections;
           var len = resp.result.connections.length;
           for (var i = 0; i < len; i++) {
+            var p = document.createElement('li');
           	p.appendChild(document.createTextNode(names[i].names[0].givenName));
             document.getElementById('list').appendChild(p);
           }
