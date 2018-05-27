@@ -120,6 +120,7 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
         gapi.client.people.people.get({
           'resourceName': 'people/me/connections',
           'personFields': 'names,phoneNumbers,emailAddresses',
+          'sortOrder': 'FIRST_NAME_ASCENDING';
           'pageToken': token
         }).then(function(resp) {
           // var p = document.createElement('li');
