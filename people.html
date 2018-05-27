@@ -125,15 +125,15 @@ console.log(resp.result);
             var td = document.createElement('td');
           	td.appendChild(document.createTextNode(conns[i].names[0].displayName));
             tr.appendChild(td);
-            
+
             var td = document.createElement('td');
-            if (conns[i].phoneNumbers[0]) {
+            if (conns[i].phoneNumbers) {
               td.appendChild(document.createTextNode(conns[i].phoneNumbers[0].value));
             }
             tr.appendChild(td);
 
             var td = document.createElement('td');
-            if (conns[i].emailAddresses[0]) {
+            if (conns[i].emailAddresses) {
               td.appendChild(document.createTextNode(conns[i].emailAddresses[0].value));
             }
             tr.appendChild(td);
