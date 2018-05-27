@@ -29,17 +29,31 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
   <head>
     <title>Say hello using the People API</title>
     <meta charset='utf-8' />
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="styles/bootstrap.min.css">
   </head>
   <body>
-    <p>Say hello using the People API.</p>
+    <p>Import your contacts</p>
 
     <!--Add buttons to initiate auth sequence and sign out-->
-    <button id="authorize-button" style="display: none;">Authorize</button>
-    <button id="signout-button" style="display: none;">Sign Out</button>
+    <button id="authorize-button" style="display: none;">Import</button>
 
-    <div id="content">
-      <ol id="list"></ol>
-    </div>
+    <br>
+    <table class="table table-striped">
+      <thead class='thead-light'>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">First</th>
+          <th scope="col">Last</th>
+          <th scope="col">Handle</th>
+        </tr>
+      </thead>
+      <tbody id='tbody'>
+      </tbody>
+    </table>
+
+    <br>
+    <button id="signout-button" style="display: none;">Sign Out</button>
 
     <script type="text/javascript">
       // Enter an API key from the Google API Console:
@@ -100,7 +114,7 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
       function makeApiCall() {
         gapi.client.people.people.get({
           'resourceName': 'people/me/connections',
-          'requestMask.includeField': 'person.names'
+          'personFields': 'names, addresses,emailAddresses'
         }).then(function(resp) {
           // var p = document.createElement('li');
           // var name = resp.result.names[0].givenName;
@@ -108,9 +122,11 @@ console.log(resp.result);
           var names = resp.result.connections;
           var len = resp.result.connections.length;
           for (var i = 0; i < len; i++) {
-            var p = document.createElement('li');
-          	p.appendChild(document.createTextNode(names[i].names[0].givenName));
-            document.getElementById('list').appendChild(p);
+            var tr = document.createElement('tr');
+            var td = document.createElement('td');
+          	td.appendChild(document.createTextNode(names[i].names[0].givenName));
+            tr.appendChild(td);
+            document.getElementById('tbody').appendChild(p);
           }
           
         });
