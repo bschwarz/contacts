@@ -105,7 +105,7 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
           var names = resp.result.names;
           var len = resp.result.names.length;
           for (var i = 0; i < len; i++) {
-          	p.appendChild(document.createTextNode('Hello, '+names[i]+'!'));
+          	p.appendChild(document.createTextNode(names[i].givenName));
             document.getElementById('content').appendChild(p);
           }
           
