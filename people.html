@@ -97,7 +97,12 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
         if (isSignedIn) {
           authorizeButton.style.display = 'none';
           signoutButton.style.display = 'block';
-          makeApiCall();
+          var ptoken = '';
+          for (var i = 0; i < 4; i++) {
+            ptoken = makeApiCall(ptoken);
+            console.log('PAGE TOKEN: ' + ptoken);
+          }
+          
         } else {
           authorizeButton.style.display = 'block';
           signoutButton.style.display = 'none';
@@ -110,10 +115,11 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
         gapi.auth2.getAuthInstance().signOut();
       }
       // Load the API and make an API call.  Display the results on the screen.
-      function makeApiCall() {
+      function makeApiCall(token) {
         gapi.client.people.people.get({
           'resourceName': 'people/me/connections',
-          'personFields': 'names,phoneNumbers,emailAddresses'
+          'personFields': 'names,phoneNumbers,emailAddresses',
+          'pageToken': token
         }).then(function(resp) {
           // var p = document.createElement('li');
           // var name = resp.result.names[0].givenName;
@@ -139,6 +145,8 @@ console.log(resp.result);
             tr.appendChild(td);
             document.getElementById('tbody').appendChild(tr);
           }
+
+          return conns.nextPageToken
           
         });
       }
