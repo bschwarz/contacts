@@ -106,7 +106,7 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
           // return
           for (var i = 0; i < 2; i++) {
             var x = makeApiCall(ptoken);
-            console.log('X: ' + x.stringify());
+            // console.log('X: ' + x.stringify());
             if (! pagetoken) {
               console.log('PTOKEN NOT VALID ' + i);
             }
@@ -138,7 +138,7 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
       function makeApiCall(token) {
         var res = gapi.client.people.people.get({
           'resourceName': 'people/me/connections',
-          'personFields': 'names,phoneNumbers,emailAddresses',
+          'personFields': 'names,phoneNumbers,emailAddresses,addresses,events,birthdays,urls,nicknames,occupations,organizations,genders,photos,taglines',
           'sortOrder': 'FIRST_NAME_ASCENDING',
           'pageToken': pagetoken
         }).then(function(resp) {
@@ -156,7 +156,24 @@ console.log('MAX COUNT: ' + maxcount);
           for (var i = 0; i < len; i++) {
             var tr = document.createElement('tr');
             var td = document.createElement('td');
-          	td.appendChild(document.createTextNode(i + ' ' + conns[i].names[0].displayName));
+            var idx = 0;
+
+            console.log('TYPE: ' + conns[i].names[0].metadata.source.type);
+            if (conns[i].names.length > 1) {
+              conns[i].names.forEach(function(e, j) {
+                if (e.metadata.source.type === "CONTACT") {
+                  idx = j;
+                }
+              });
+            }
+            console.log('TYPE2: ' + conns[i].names[idx].metadata.source.type);
+
+            var name = conns[i].names[idx].honorificPrefix + ' ' + conns[i].names[idx].givenName + ' ' + conns[i].names[idx].middleName + ' ' + conns[i].names[idx].familyName;
+            if (conns[i].names[idx].metadata.source.type != 'CONTACT') {
+              name += '*****';
+            }
+            console.log('***NAME: ' + name);
+          	td.appendChild(document.createTextNode(i + ' ' + name));
             tr.appendChild(td);
 
             var td = document.createElement('td');
