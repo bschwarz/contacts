@@ -154,6 +154,7 @@ console.log('MAX COUNT: ' + maxcount);
           console.log('PG TOKEN: ' + pagetoken);
           var conns = resp.result.connections;
           var len = conns.length;
+          var nameFields = ['honorificPrefix', 'givenName', 'middleName', 'familyName'];
           for (var i = 0; i < len; i++) {
             var tr = document.createElement('tr');
             var td = document.createElement('td');
@@ -176,6 +177,7 @@ console.log('MAX COUNT: ' + maxcount);
             console.log('TYPE2: ' + conns[i].names[idx].metadata.source.type);
 
             var nmobj = conns[i].names[idx];
+            nameFields.forEach(x => (nmobj[x] = nmobj[x] ? nmobj[x] : ''));
             var name = nmobj.honorificPrefix + ' ' + nmobj.givenName + ' ' + nmobj.middleName + ' ' + nmobj.familyName;
 
             if (conns[i].names[idx].metadata.source.type != 'CONTACT') {
