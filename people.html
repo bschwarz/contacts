@@ -104,7 +104,7 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
           var ptoken = '';
           // console.log(makeApiCall2());
           // return
-          for (var i = 0; i < 2; i++) {
+          for (var i = 0; i < 1; i++) {
             var x = makeApiCall(ptoken);
             // console.log('X: ' + x.stringify());
             if (! pagetoken) {
@@ -140,6 +140,7 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
           'resourceName': 'people/me/connections',
           'personFields': 'names,phoneNumbers,emailAddresses,addresses,events,birthdays,urls,nicknames,occupations,organizations,genders,photos,taglines',
           'sortOrder': 'FIRST_NAME_ASCENDING',
+          'pageSize': 1000,
           'pageToken': pagetoken
         }).then(function(resp) {
           // var p = document.createElement('li');
@@ -159,6 +160,12 @@ console.log('MAX COUNT: ' + maxcount);
             var idx = 0;
 
             console.log('TYPE: ' + conns[i].names[0].metadata.source.type);
+
+            /**
+            * Try to figure out which name to use. If only 1 name
+            * then use that name. Otherwise, try to find name
+            * with CONTACT as the type
+            */
             if (conns[i].names.length > 1) {
               conns[i].names.forEach(function(e, j) {
                 if (e.metadata.source.type === "CONTACT") {
@@ -168,7 +175,9 @@ console.log('MAX COUNT: ' + maxcount);
             }
             console.log('TYPE2: ' + conns[i].names[idx].metadata.source.type);
 
-            var name = conns[i].names[idx].honorificPrefix + ' ' + conns[i].names[idx].givenName + ' ' + conns[i].names[idx].middleName + ' ' + conns[i].names[idx].familyName;
+            var nmobj = conns[i].names[idx];
+            var name = nmobj.honorificPrefix + ' ' + nmobj.givenName + ' ' + nmobj.middleName + ' ' + nmobj.familyName;
+
             if (conns[i].names[idx].metadata.source.type != 'CONTACT') {
               name += '*****';
             }
@@ -176,15 +185,29 @@ console.log('MAX COUNT: ' + maxcount);
           	td.appendChild(document.createTextNode(i + ' ' + name));
             tr.appendChild(td);
 
+
             var td = document.createElement('td');
             if (conns[i].phoneNumbers) {
-              td.appendChild(document.createTextNode(conns[i].phoneNumbers[0].value));
+
+              var phs = [];
+              conns[i].phoneNumbers.forEach(function(e, i) {
+                phs.push(e.value + ' (' + e.type + ')');
+              });
+              // td.appendChild(document.createTextNode(conns[i].phoneNumbers[0].value));
+              td.appendChild(document.createTextNode(phs.join(', ')));
             }
             tr.appendChild(td);
 
+
             var td = document.createElement('td');
             if (conns[i].emailAddresses) {
-              td.appendChild(document.createTextNode(conns[i].emailAddresses[0].value));
+
+              var ems = [];
+              conns[i].emailAddresses.forEach(function(e, i) {
+                ems.push(e.value + ' (' + e.type + ')');
+              });
+
+              td.appendChild(document.createTextNode(ems.join(', ')));
             }
             tr.appendChild(td);
             document.getElementById('tbody').appendChild(tr);
