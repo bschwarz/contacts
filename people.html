@@ -46,6 +46,7 @@ AIzaSyA5F-ymdVDIO7mTGeqDxaY5vFVHBCRNBHg
           <th scope="col">Name</th>
           <th scope="col">Phone</th>
           <th scope="col">Email</th>
+          <th scope="col">Address</th>
         </tr>
       </thead>
       <tbody id='tbody'>
@@ -155,6 +156,7 @@ console.log('MAX COUNT: ' + maxcount);
           var conns = resp.result.connections;
           var len = conns.length;
           var nameFields = ['honorificPrefix', 'givenName', 'middleName', 'familyName'];
+          var addrFields = ['poBox', 'postalCode', 'region', 'streetAddress', 'countryCode', 'fomrattedType', 'city', 'formattedValue', 'country', 'extendedAddress'];
           for (var i = 0; i < len; i++) {
             var tr = document.createElement('tr');
             var td = document.createElement('td');
@@ -178,7 +180,11 @@ console.log('MAX COUNT: ' + maxcount);
 
             var nmobj = conns[i].names[idx];
             nameFields.forEach(x => (nmobj[x] = nmobj[x] ? nmobj[x] : ''));
-            var name = nmobj.honorificPrefix + ' ' + nmobj.givenName + ' ' + nmobj.middleName + ' ' + nmobj.familyName;
+            var nnames = [];
+            if (conns[i].nicknames) {
+              conns[i].nicknames.forEach(x => (nnames.push(x.value)));
+            }
+            var name = nmobj.honorificPrefix + ' ' + nmobj.givenName + ' ' + nmobj.middleName + ' ' + nmobj.familyName + ' (' + nnames.join(',') + ')';
 
             if (conns[i].names[idx].metadata.source.type != 'CONTACT') {
               name += '*****';
@@ -212,8 +218,33 @@ console.log('MAX COUNT: ' + maxcount);
               td.appendChild(document.createTextNode(ems.join(', ')));
             }
             tr.appendChild(td);
+
+
+            var td = document.createElement('td');
+
+            
+            if (conns[i].addresses) {
+
+              var ems = [];
+              conns[i].addresses.forEach(function(e, j) {
+                var aobj = conns[i].addresses[j];
+                var field = '(' + aobj['type'] + ')';
+                addrFields.forEach(function(x) {
+                  aobj[x] = aobj[x] ? aobj[x] : 'NA'; 
+                  field += '\n' + x + '=' + aobj[x];
+                  });
+                ems.push(field);
+              });
+
+              td.appendChild(document.createTextNode(ems.join(', ')));
+            }
+            tr.appendChild(td);
+
+
             document.getElementById('tbody').appendChild(tr);
           }
+
+
           document.getElementById('total').innerHTML = "Total number of contacts = " + resp.result.totalItems;
 
           if (resp.result.nextPageToken) {
