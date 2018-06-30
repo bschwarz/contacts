@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="xlsx-populate.min.js"></script>
+	<script type="text/javascript">
+
+		function getFile(files) {
+			// var file = document.getElementById("file-upload").files[0];
+	 
+
+	 		for (var file of files) {
+				// A File object is a special kind of blob.
+				XlsxPopulate.fromDataAsync(file)
+				    .then(workbook => {
+				        const values = workbook.sheet(0).usedRange().value();
+
+				        for (var val of values) {
+				        	// console.log(val);
+				        	$('#table').append('<tr>');
+				        	for (var cell of val) {
+				        		$('#table').append('<td>' + cell + '</td>');
+				        	}
+				        	$('#table').append('</tr>');
+				        }
+				 });
+	 		}
+			
+		}
+	</script>
+</head>
+<body>
+	<input type='file' id='file-upload' onchange="getFile(this.files)" multiple />
+
+	<table id='table'></table>
+</body>
+</html>
